@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kubernetes Resources</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Kubernetes Resources</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Group</th>
+                <th>Version</th>
+                <th>Resource</th>
+                <th>Namespaced</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody id="resourceTableBody">
+        </tbody>
+    </table>
+
+    <script>
+        function fetchResources() {
+            fetch('/resources')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('resourceTableBody');
+                    tableBody.innerHTML = '';
+                    data.resources.forEach(resource => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${resource.group || '(core)'}</td>
+                            <td>${resource.version}</td>
+                            <td>${resource.resource}</td>
+                            <td>${resource.namespaced}</td>
+                            <td>${resource.count}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching resources:', error);
+                });
+        }
+
+        // Automatically fetch and display the resources when the page loads
+        window.onload = fetchResources;
+    </script>
+</body>
+</html>
