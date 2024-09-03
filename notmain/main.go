@@ -49,7 +49,7 @@ func main() {
 		log.Fatalf("Error creating dynamic client: %v", err)
 	}
 
-	http.HandleFunc("/resources", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		handleResources(w, r, clientset, dynClient)
 	})
 
